@@ -129,9 +129,11 @@ def get_x_y_sequences(dataset, shift=1, stats=True):
 
     for u in users:
         user_item_seq = np.array(dataset[dataset['user_id'] == u]['item_id'])
-        user_sequences_x.append(user_item_seq[:-shift])
-        user_sequences_y.append(user_item_seq[shift:])
-        lengths.append(len(user_item_seq))
+        cuts = np.random.randint(low=0, high = len(user_item_seq), size=(min(shift, len(user_item_seq))))
+        for cut in cuts:
+            user_sequences_x.append(user_item_seq[:-cut])
+            user_sequences_y.append(user_item_seq[cut:])
+            lengths.append(len(user_item_seq))
 
     median = np.median(lengths)
 
