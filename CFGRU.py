@@ -30,7 +30,6 @@ class CFGRU:
         self.diversity_bias = []
      
 
-
     def build_model(self, ckpt_dir='', return_sequences=True, initializer='glorot_uniform', summary=True):
         """
         Building a sequential LSTM model in Keras
@@ -47,12 +46,12 @@ class CFGRU:
                                       batch_input_shape=[self.batch_size, None]),
 
             tf.keras.layers.Masking(mask_value=self.total_items),
-
-            tf.keras.layers.Bidirectional(tf.keras.layers.GRU(units=self.rnn_units,
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.GRU(units=64,
                                  return_sequences=return_sequences,
                                  stateful=False,  # Reset cell states with each batch
-                                 recurrent_initializer=initializer)),
-
+                                 recurrent_initializer=initializer),
+            tf.keras.layers.Dropout(0.5),
             tf.keras.layers.Dense(self.total_items, activation='softmax')
         ])
         
